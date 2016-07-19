@@ -17,7 +17,7 @@ tags:
 ---------
 
 
-**Issue Description: **In this kata you have to create all permutations of an input string and remove duplicates, if present. This means, you have to shuffle all letters from the input in all possible orders.
+**Issue Description:** In this kata you have to create all permutations of an input string and remove duplicates, if present. This means, you have to shuffle all letters from the input in all possible orders.
 
 **Example** 	
 
@@ -41,6 +41,7 @@ The order of the permutations doesn't matter.
 按照这个思路，先统计了字符串中每个字符出现的个数，然后试图通过“插空法”求出排列方案总数，
 
 废话少说先上代码
+
 ```
 function permutations(string) {
    var result=[];
@@ -72,7 +73,7 @@ function unique(arr) {
   return ret
 }
 ```
->下面实现过程参考了http://www.cnblogs.com/kindofblue/p/4947748.html
+>下面实现过程参考了<a src="http://www.cnblogs.com/kindofblue/p/4947748.html">约翰的迷宫的Blog</a>
 
 ###实现过程
 首先明确函数的输入和输出，输入是一个字符串，输出是各种排列组合形成的字符串组成的数组，所以函数的大体框架应该是这样的：
@@ -178,6 +179,7 @@ function permutations(string) {
 
 没错，一句话搞定了，不由得感叹函数式编程的伟大
 
->下面看到的一个介绍了全排列的6种实现方式http://mengliao.blog.51cto.com/876134/824079
->有兴趣的朋友可以去看看，写的挺不错的
+>下面看到的一个介绍了全排列的6种实现方式
+> <a src="http://mengliao.blog.51cto.com/876134/824079">BlackAlpha 的BLOG</a>
+> 有兴趣的朋友可以去看看，写的挺不错的
 
