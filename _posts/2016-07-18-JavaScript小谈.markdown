@@ -34,9 +34,10 @@ var parent = function(){
 };
 parent();
 ```
+
 直觉地，内部函数可以访问外部函数的变量，外部函数不能访问内部函数的变量。上面的例子中内部函数child可以访问变量age，而外部函数不能访问child中childAge，因此会抛出定义变量的异常。
 
-**but，importantly** 如果没有关键字`` var ``,那么变量就被声明为全局变量了。
+**but，importantly** 如果没有关键字``var``,那么变量就被声明为全局变量了。
 
 ```
 function foo(){
@@ -46,7 +47,7 @@ foo();
 console.log(value);// hello
 console.log(global.value);// hello
 ```
-这个例子可以很正常输出``hello`` ,  是因为　``value``变量在定义是没有使用关键字``` var ```，所以被定义成了全局变量。在NodeJS中，全局变量会被定义在``global``对象下，在浏览器中全局变量会被定义在``window``对象下。
+这个例子可以很正常输出``hello`` ,  是因为　``value``变量在定义是没有使用关键字``var``，所以被定义成了全局变量。在NodeJS中，全局变量会被定义在``global``对象下，在浏览器中全局变量会被定义在``window``对象下。
 
 如果你确实要定义一个全局变量的话，请显示地定义``global`` or ``window``对象下。
 
@@ -73,9 +74,10 @@ foo();
 ### 闭包
 
 闭包这个概念，在函数式编程里很常见，简单说，就是使用内部函数可以访问定义在外部函数中的变量。
-假如我们要实现一些列函数，add10，add20，它们的定义是 ``int add10(int n)`` 。
+假如我们要实现一些列函数，add10，add20，它们的定义是 ``int add10(int n)``。
 
 为此为我们构造里一个名为``adder``的构造器，如下：
+
 ```
 var adder = function(x){
 	var base = x;
@@ -89,11 +91,13 @@ console.log(add10(5));//15
 var add20 = adder(20);
 console.log(add20(5));//25
 ```
+
 每次调用adder时，adder都会返回一个函数给我们。我们传给adder的值，会保存一个名为``base``的变量中。由于返回的函数在其中引用里base的值，于是base的引用计数被＋1。当返回函数不被垃圾回收，则base也会一直存在。
 
 如果想深入理解这块，可以看看这篇 http://coolshell.cn/articles/6731.html
 
 - 闭包的一个坑
+
 ```
 for(var i = 0; i < 5; i++){
 	setTimeout(function(){
@@ -101,6 +105,7 @@ for(var i = 0; i < 5; i++){
 	},5);
 }//5 5 5 5 5
 ```
+
 上面这个代码块会打印5个 ``5``,而我们预想的结果是``0 1 2 3 4 5``
 之所以这样，是因为``setTimeout``中的``i``是对外层``i``的引用。当``setTimeout``的代码被解释时候，运行时只是记录里``i``的引用，而不是值。而当``setTimeout``被触发时，五个``setTime``中的``i``同时被取值，由于它们都指向了外层的同一个i，而那个为了得到我们预想的结果，我们可以把赋值成一个局部临时变量，从而摆脱外出迭代的影响。
 
@@ -163,6 +168,7 @@ console.log(myObject.getValue()); //100
 
 3）构造器中的``this``:指向新的对象
 js中，我们通过``new``关键字来调用构造函数，此时``this``会帮顶在该新对象上。
+
 ```
 
 var SomeClass = function(){
