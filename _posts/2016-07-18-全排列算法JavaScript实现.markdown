@@ -1,4 +1,3 @@
-
 ---
 layout: post
 title: "全排列算法JavaScript实现"
@@ -12,10 +11,10 @@ tags:
 #全排列算法JavaScript实现
 
 
------
+---------
 >本文可随意转载，但请注明出处
 
------
+---------
 
 
 **Issue Description: **In this kata you have to create all permutations of an input string and remove duplicates, if present. This means, you have to shuffle all letters from the input in all possible orders.
