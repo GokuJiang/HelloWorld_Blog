@@ -9,14 +9,15 @@
 title: Hello World Blog
 email: jym775096422@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  分享技术,将开源进行到底。
+  技术博客,我会分享一些我的见解,如有不对的地方,望大家指正。
+  对于错误对地方,大家可以通过github和email给我,我会及时更正。
 
 baseurl: "/HelloWorld_Blog" # the subpath of your site, e.g. /blog
 url: "https://helloworlderly.github.io/HelloWorld_Blog/" # the base hostname & protocol for your site
 twitter_username: JSONJiang
 github_username:  helloworlderly
+weibo_username: 狂拽帅酷吊炸天的羊羊羊
 
 # Build settings
 markdown: redcarpet
