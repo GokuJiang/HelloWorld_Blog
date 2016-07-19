@@ -2,7 +2,6 @@
 layout: post
 title "《作用域与闭包：this，var，（function（）｛｝）》"
 date: 2016-07-19 14:28:20 +0800
-categories: jekyll update
 ---
 
 #《作用域与闭包：this，var，（function(){}）》
