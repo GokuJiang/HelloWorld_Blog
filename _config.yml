@@ -19,4 +19,4 @@ twitter_username: JSONJiang
 github_username:  helloworlderly
 
 # Build settings
-markdown: kramdown
+markdown: redcarpet
