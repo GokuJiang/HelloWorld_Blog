@@ -1,3 +1,7 @@
+---
+layout: post
+title "《作用域与闭包：this，var，（function（）｛｝）》"
+---
 #《作用域与闭包：this，var，（function(){}）》
 @(JavaScript)[block|作用域|this|var]
 
