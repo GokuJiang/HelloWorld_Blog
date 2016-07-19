@@ -126,6 +126,7 @@ this出现的场景分为四类，简单说就是：
 
 1）函数有所属对象时：指向所属对象
 函数有所属对象时，通常通过``.``表达式调用。这时，``this``自然指向所属对象。比如下面这个例子：
+
 ```
 var myObjcet = {value:100};
 moObject.getValue = function(){
@@ -136,9 +137,11 @@ moObject.getValue = function(){
 
 console.log(myObjcet.getValue()); //=>100
 ```
+
 ``getValue()``属于对象``myObject``, 并由``myObject``进行``.``,因此``this``指向对象``myObjcet``。
 
 2）函数没有所属对象：指向全局对象
+
 ```
 var myObject = {value: 100};
 myObject.getValue = function(){
@@ -152,6 +155,7 @@ myObject.getValue = function(){
 
 console.log(myObject.getValue()); //100
 ```
+
 在上述代码中，``foo``函数虽然定义在``getValue``的函数体内，但实际既不属于``getValue``也不属于``myObject``。``foo``并没有被绑定在任何对象上，所以当调用时，它的``this``指针指向了全局对象``global``。
 
 > 据说这个是设计的错误
@@ -159,6 +163,7 @@ console.log(myObject.getValue()); //100
 3）构造器中的``this``:指向新的对象
 js中，我们通过``new``关键字来调用构造函数，此时``this``会帮顶在该新对象上。
 ```
+
 var SomeClass = function(){
 	this.value = 100;
 }
@@ -180,6 +185,7 @@ console.log(myCreate.value);
 	- 其他参数一一列举
 
 简单说，``call``的方式更接近平时使用的函数，而``apply``需要我们传递``Array``形式的数组给它。它们可以相互转换的。
+
 ```
 var myObject = {value:100};
 var foo = function(){
@@ -191,6 +197,5 @@ foo.apply(myObject); //{value:100}
 foo.call(myObject); //{value:100}
 var newFoo = foo.bind(myObject);
 newFoo();  //{value:100}
-
 ```	 
 	 
