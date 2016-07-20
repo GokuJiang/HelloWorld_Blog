@@ -1,11 +1,12 @@
 ---
 layout: post
-title: JavaScript functional programming(I)
-date: 2016-7-20 20:22:30 +0800
+title: "JavaScript functional programming(I)"
+date: 2016-07-20 17:26:20 +0800
 author: Yongming
-tags: 
+tags:
     - JavaScript
     - functional programming
+    
 ---
 
 ##JavaScript 函数式编程(functional programming)
@@ -19,7 +20,6 @@ tags:
 
 这里我不涉及高深的数学知识和高级特性,仅仅就我的了解简单聊聊"函数式"编程。
 
-------
 ###定义
 
 简单说，"函数式编程"是一种["编程范式"](https://en.wikipedia.org/wiki/Programming_paradigm)（programming paradigm），也就是如何编写程序的方法论。
@@ -111,6 +111,7 @@ multiply(x,add(y,z)) === add(multiply(x,y),xultiply(x,z))
 ```
 
 是的，这些经典的数学定律迟早会派上用场。我们来看看能否运用这些定律简化这个小程序。
+
 ```
 var result = add(multiply(flock_b,add(flock_a,flock_c)),multiply(flock_a,flock_b));
 
@@ -127,7 +128,6 @@ multiply(flock_b,add(flock_a,flock_a));
 
 漂亮！除了调用的函数，一点多余的代码都不需要写。当然这里我们定义``add``和``multiply``是为了代码完整性，实际上并不必要——在调用之前它们肯定已经在某个类库里定义好了。
 
-----------
 
 ###函数是一等公民
 所谓一等公民,指的是函数与其他数据类型一样,处于平等地位,可以赋值给其他变量,也可以作为参数传入另一个函数,或者作为别的函数的返回值。
@@ -178,6 +178,7 @@ hi("Yongming");
 
 ```
 
+
 ``greeting``只不过是转个身然后以相同的参数调用了``hi``函数而已,因此可以这么写:
 
 ```
@@ -187,6 +188,7 @@ var greeting = hi;
 greeting("yogming");
 
 ```
+
 
 换句话说, ``hi``已经是个接受一个参数的函数了，为何要再定义一个额外的包裹函数，而它仅仅是用这个相同的参数调用 ``hi``？完全没有道理。这就像在大夏天里穿上你最厚的大衣，只是为了跟热空气过不去，然后吃上个冰棍。真是脱裤子放屁多此一举。
 用一个函数把另一个函数包起来，目的仅仅是延迟执行，真的是非常糟糕的编程习惯。（稍后我将告诉你原因，跟可维护性密切相关。）
@@ -208,7 +210,9 @@ var getServerStuff = ajaxCall;
 
 ```
 
+
 世界上到处都充斥着这样的垃圾 ajax 代码。以下是上述两种写法等价的原因：
+
 
 ```
 //look here
@@ -233,7 +237,9 @@ var getServerStuff = ajaxCall;
 
 ```
 
+
 各位，以上才是写函数的正确方式。一会儿再告诉你为何我对此如此执着。
+
 
 ```
     var BlogController = (fucntion(){
@@ -263,7 +269,9 @@ var getServerStuff = ajaxCall;
     
 ```
 
+
 这个控制器(Controller)绝大多数代码是没用的。我们可以重写成这样:
+
 
 ```
     var BlogController = {index:Views.index,show:Views.show,create:Db.create,update:Db.update,destroy:Db.destroy};
@@ -289,6 +297,7 @@ httpGet('/post/id',function(json){
 
 如果``httpGet``要该成一个可以抛除``error``异常的函数,那么我们还有回头吧``renderPost``改掉
 
+
 ```
 //像这样
 
@@ -300,11 +309,14 @@ httpGet('/post/id',function(json,err){
 
 ```
 
+
 但是写成一等公民函数的形式, 要做的改动就少很多:
+
 
 ```
 httpGet('/post/id',renderPost);//renderPost在httpGet中调用,想要多少参数都行
 ```
+
 
 除了删除不必要的函数，正确地为参数命名也必不可少。当然命名不是什么大问题，但还是有可能存在一些不当的命名，尤其随着代码量的增长以及需求的变更，这种可能性也会增加。
 项目中常见的一种造成混淆的原因是，针对同一个概念使用不同的命名。还有通用代码的问题。比如，下面这两个函数做的事情一模一样，但后一个就显得更加通用，可重用性也更高：
