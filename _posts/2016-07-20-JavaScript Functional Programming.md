@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "JavaScript functional programming(I)"
+title: "JavaScript Functional Programming(I)"
 date: 2016-07-20 17:26:20 +0800
 author: Yongming
 tags:
