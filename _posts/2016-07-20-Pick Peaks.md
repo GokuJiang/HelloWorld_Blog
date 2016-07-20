@@ -70,3 +70,14 @@ function pickPeaks(arr) {
 }
 ```
 
+下面介绍一个用函数式编程来解决的方法
+
+```
+function pickPeaks(arr){
+  var pos = arr.map((x,i)=>i > 0 ? Math.sign(x - arr[i-1]) * i : 0)
+    .filter(i => i != 0)
+    .filter((x,i,a) => i < a.length-1 && (a[i+1] < 0 && x > 0));
+  return {pos:pos, peaks:pos.map(i=>arr[i])}
+}
+```
+
