@@ -7,11 +7,16 @@ layout: default
 <!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
 
 <!-- Post Header -->
-<style type="text/css">
+<!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/monokai_sublime.min.css">-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>-->
+<!--<script type="text/javascript"> hljs.initHighlightingOnLoad(); </script>-->
+<!--<style type="text/css">-->
     header.intro-header{
         background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')
     }
 </style>
+
+
 <header class="intro-header" >
     <div class="container">
         <div class="row">
@@ -53,7 +58,7 @@ layout: default
 
                 {% if site.duoshuo_share && site.duoshuo_username %}
                 <!-- 多说 Share start -->
-                </style>
+
                 <div class="ds-share"
                     style="text-align: right"
                     data-thread-key="{{page.id}}"

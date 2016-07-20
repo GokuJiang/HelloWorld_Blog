@@ -19,6 +19,7 @@ tags:
 也许继"面向对象编程"之后,"函数式编程"会成为下一个编程对主流范式(paradigm)。
 
 这里我不涉及高深的数学知识和高级特性,仅仅就我的了解简单聊聊"函数式"编程。
+------
 
 ###定义
 
@@ -27,7 +28,7 @@ tags:
 举个简(yu)单(chun)的例子。下面程序是一个种群程序,一个种群比如说狍子(一个很傻很天真的动物),狍子群合并则成了各大的狍子群,生小狍子就增加了该种群的数量。
 note:这个程序并不是面向对象的良好实践,它只是强调变量赋值方式的一些弊端。
 
-```
+````javascript
 var Flock = function(n) {
     this.reoDeer = n;
 };
@@ -49,14 +50,13 @@ var flock_c = new Flock(0);
 var result = flock_a.conjoin(flock_c).breed(flock_b).conjoin(flock_a.breed(flock_b)).reoDeer;
 
 //=>32
-
-```
+````
 
 我相信没人会写这样糟糕透顶的程序。代码的内部可变状态非常难以追踪，而且，最终的答案还是错的！正确答案是``16``，但是因为``flock_a``在运算过程中永久地改变了，所以得出了错误的结果。这是 IT 部门混乱的表现，非常粗暴的计算方式。
 如果你看不懂这个程序，没关系，我也看不懂。重点是状态和可变值非常难以追踪，即便是在这么小的一个程序中也不例外。
 我们试试另一种更函数式的写法：
 
-```
+```javascript
 var conjoin = function(flock_x, flock_y) { return flock_x + flock_y };
 var breed = function(flock_x, flock_y) { return flock_x * flock_y };
 
@@ -66,21 +66,18 @@ var flock_c = 0;
 
 var result = conjoin(breed(flock_b, conjoin(flock_a, flock_c)), breed(flock_a, flock_b));
 //=>18
-
 ```
 
 这次我们得到了正确的答案,而且少写了很多代码。不过嵌套函数让人费解。 这种写法更优雅,不过代码肯定越直白越好,所以我么深入挖掘,看看这段代码究竟做了什么。我们发现,它不过是简单的加``conjoin``和乘``breed``而已。
 
 代码中的两个函数除了函数名有些特殊，其他没有任何难以理解的地方。我们把它们重命名一下，看看它们的真面目。
 
-```
+```javascript
 var add = function(x,y) {
-
     return x+y;
 };
 
 var multiply = function(x,y) {
-
     return x * y;
 };
 
@@ -91,9 +88,11 @@ var flock_c = 0;
 var result = add(multiply(flock_b,add(flock_a,flock_c)),multiply(flock_a,flock_b));
 ```
 
+
 这么一来，你会发现我们不过是在运用古人早已获得的知识：
 
-```
+
+```javascript
 //结合律(assosiative)
 add(add(x,y),z) === add(x,add(y,z))
 
@@ -106,13 +105,11 @@ add(x,y) === add(y,x)
 
 //分配律(distributive)
 multiply(x,add(y,z)) === add(multiply(x,y),xultiply(x,z))
-
-
 ```
 
 是的，这些经典的数学定律迟早会派上用场。我们来看看能否运用这些定律简化这个小程序。
 
-```
+```javascript
 var result = add(multiply(flock_b,add(flock_a,flock_c)),multiply(flock_a,flock_b));
 
 // 应用同一律，去掉多余的加法操作（add(flock_a, flock_c) == flock_a）
@@ -134,7 +131,7 @@ multiply(flock_b,add(flock_a,flock_a));
 
 举个栗子,下面的print函数是变量,可以作为另一函数的参数:
 
-```
+```javascript
 var print = function(i){console.log(i)};
 
 [1,2,3].forEach(print);
@@ -143,7 +140,7 @@ var print = function(i){console.log(i)};
 
 再或者
 
-```
+```javascript
 var hi = function(name) {
 
     return 'Hi' + name;
@@ -163,7 +160,7 @@ var greeting = function(name) {
 
 我们试一下
 
-```
+```javascript
 hi;
 //function(name){
 //
@@ -181,8 +178,7 @@ hi("Yongming");
 
 ``greeting``只不过是转个身然后以相同的参数调用了``hi``函数而已,因此可以这么写:
 
-```
-
+```javascript
 var greeting = hi;
 
 greeting("yogming");
@@ -195,7 +191,7 @@ greeting("yogming");
 
 再看个例子。下面代码都来自``npm``上的模块包
 
-```
+```javascript
 //脱裤子放屁嘛
 var getServerStuff = function(callback){
 
@@ -214,7 +210,7 @@ var getServerStuff = ajaxCall;
 世界上到处都充斥着这样的垃圾 ajax 代码。以下是上述两种写法等价的原因：
 
 
-```
+```javascript
 //look here
 return ajaxCall(function(json){
     return callback(json);
@@ -241,7 +237,7 @@ var getServerStuff = ajaxCall;
 各位，以上才是写函数的正确方式。一会儿再告诉你为何我对此如此执着。
 
 
-```
+```javascript
     var BlogController = (fucntion(){
         var index = function(posts){
             return Views.index(posts);
@@ -273,7 +269,7 @@ var getServerStuff = ajaxCall;
 这个控制器(Controller)绝大多数代码是没用的。我们可以重写成这样:
 
 
-```
+```javascript
     var BlogController = {index:Views.index,show:Views.show,create:Db.create,update:Db.update,destroy:Db.destroy};
 ```
 
@@ -285,7 +281,7 @@ var getServerStuff = ajaxCall;
 另外,如果一个函数被不必要的包裹起来,而且发生改动,那么包裹它 到那个函数也要做相应的变更。
 
 
-```
+```javascript
 httpGet('/post/id',function(json){
 
     return renderPost(json);
@@ -298,7 +294,7 @@ httpGet('/post/id',function(json){
 如果``httpGet``要该成一个可以抛除``error``异常的函数,那么我们还有回头吧``renderPost``改掉
 
 
-```
+```javascript
 //像这样
 
 httpGet('/post/id',function(json,err){
@@ -313,7 +309,7 @@ httpGet('/post/id',function(json,err){
 但是写成一等公民函数的形式, 要做的改动就少很多:
 
 
-```
+```javascript
 httpGet('/post/id',renderPost);//renderPost在httpGet中调用,想要多少参数都行
 ```
 
@@ -322,7 +318,7 @@ httpGet('/post/id',renderPost);//renderPost在httpGet中调用,想要多少参�
 项目中常见的一种造成混淆的原因是，针对同一个概念使用不同的命名。还有通用代码的问题。比如，下面这两个函数做的事情一模一样，但后一个就显得更加通用，可重用性也更高：
 
 
-```
+```javascript
 // 只针对当前的博客
 var validArticles = function(articles) {
   return articles.filter(function(article){
