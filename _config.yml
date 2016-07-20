@@ -39,23 +39,23 @@ gems: [jekyll-paginate]
 # replace redcarpet to kramdown,
 # although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
 # document: http://jekyllrb.com/docs/configuration/#kramdown
-highlighter: pygments
+highlighter: pygments # use Github Flavored Markdown !important
 markdown: redcarpet
 #redcarpet:
 #  extensions: ["fenced_code_blocks", "autolink", "tables", "strikethrough", "with_toc_data"]
 
-                           # use Github Flavored Markdown !important
 
-
-
-# Disqus settings
-#disqus_username: _your_disqus_short_name_
 
 # Duoshuo settings
-#duoshuo_username: huxblog
+duoshuo_username: yongming
 # Share component is depend on Comment so we can NOT use share only.
-#duoshuo_share: true                     # set to false if you want to use Comment without Sharing
-
+duoshuo_share: true              # set to false if you want to use Comment without Sharing
+#comments:
+#  provider: duoshuo
+#  duoshuo:
+#    short_name: Yongming
+#  disqus:
+#    short_name: Yongming
 
 
 
