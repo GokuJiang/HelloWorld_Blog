@@ -87,4 +87,75 @@ var immutableState = Object.freeze({
 > 其中`x`叫作自变量, `y`叫因变量，集合`A`叫做函数的定义域，与`x`对应的`y`叫做函数值，函数值的集合`B`叫做函数的值域。
 > 定义域，值域，对应法则称为函数的三要素。一般书写为  。若省略定义域，一般是指使函数有意义的集合。
 
+ 》 (未完待续)
+ 
+ 
+####追求"纯"的理由
 
+#####可缓存性（Cacheable）
+     
+首先，纯函数总能够根据输入来做缓存。实现缓存的一种典型方式是 memoize 技术：
+
+```javascript
+var squareNumber = memoize(function(x){return x*x;});
+squareNumber(4);
+//=> 16
+
+squareNumber(4); // 从缓存中读取输入值为 4 的结果
+//=> 16
+
+squareNumber(5);
+//=> 25
+
+squareNumber(5); // 从缓存中读取输入值为 5 的结果
+//=> 25
+```
+
+下面的代码是一个简单的实现，尽管它不太健壮。
+
+```javascript
+var memoize = function(f){
+    var cache = {};
+    
+    return function(){
+        var arg_str = JSON.stringify(arguments);
+        cache[arg_str] = cache[arg_str] || f.apply(f,arguments);
+        return cache[arg_str];
+    };
+};
+```
+
+值得注意的一点是,可以通过延迟执行的方法吧不纯的函数转换为纯函数
+
+```javascript
+var pureHttpCall = memize(frunction(url,params){
+    return function(){return $.getJSON(url,params);}
+});
+```
+
+这里有趣的地方在于我们并没有真正发送``http``请求——它只返回来一个函数,当调用它当时候才会发出请求。这个函数之所以有资格成为纯函数,是因为它总是会根据相同当输入返回相同当输出,给定``url``和``params``之后,它就会返回同一个发送``http``请求的函数。
+
+我们的``memoize``函数工作起来没有任何问题,虽然它缓存的并不是http请求所返回的结果, 而是生成的函数。
+
+
+####可移植性/自文档化(Portable/Self-Documenting)
+
+纯函数是完全自给自足的，它需要的所有东西都能轻易获得。仔细思考思考这一点...这种自给自足的好处是什么呢？首先，纯函数的依赖很明确，因此更易于观察和理解——没有偷偷摸摸的小动作。
+
+```javascript
+//不纯的
+var signUp = function(attrs){
+    var user = saveUser(attrs);
+    welcomeUser(user);
+}
+
+//纯的
+var signUp = function(Db,Email,attrs){
+    return function() {
+        var user = saveUser(Db, attrs);
+        welcomeUser(Email, user);
+    };
+
+}
+
+```
