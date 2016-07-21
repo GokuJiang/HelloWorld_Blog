@@ -10,7 +10,7 @@ tags:
 ---
 
 
-###纯函数式编程
+##纯函数式编程
 
 #### **纯函数的概念**
 > 纯函数是这样一种函数,即相同的输入,永远会得到相同的输出,而且没有任何可观察的副作用
@@ -159,3 +159,107 @@ var signUp = function(Db,Email,attrs){
 }
 
 ```
+
+这个例子表明, 纯函数对于其依赖必须要诚实,这样我们就能知道它的目的。仅从纯函数版本的``signUp``的签名就可以看出,它将要用到``Db``,``Email``和``attrs``,这在最小程度上给了我们足够多的信息。
+
+其次,通过强迫"注入"依赖, 或者把它们当作参数传递, 我们的的应用也更加灵活, 因为数据库或者邮件客户端等等都参数化了。 如果要使用另一个``Db``, 只需要吧它传给函数就行了。 如果想在一个新应用中使用这个可以靠的函数,尽管吧新的``Db``和``Email``传递过去就好了。
+
+在JavaScript设定中, ``portable``意味着把函数序列化(serlalizing)并通过socket发送, 也可以意味着代码能够在web workers中运行。总之,``portable``是个非常强大的特性。
+
+命令式编程中“典型”的方法和过程都深深地根植于它们所在的环境中，通过状态、依赖和有效作用（available effects）达成；纯函数与此相反，它与环境无关，只要我们愿意，可以在任何地方运行它。
+
+####可测试行(Testable)
+纯函数让测试更加容易。我们不需要伪造一个“真实的”支付网关，或者每一次测试之前都要配置、之后都要断言状态（assert the state）。只需简单地给函数一个输入，然后断言输出就好了。
+
+####合理性(Reasonable)
+很多人相信使用纯函数最大的好处是``引用透明(referential transparency)。如果一段代码可以替换成它执行所得的结果,而且是在不改变整个程序行为下的前提下替换的,那我们说这段代码说是引用透明的。
+
+由于纯函数总是能够根据相同的输入返回相同的输出，所以它们就能够保证总是返回同一个结果，这也就保证了引用透明性。我们来看一个例子。
+
+```javascript
+var decrementHP = function(player){
+    return player.set("hp",player.hp-1);
+};
+
+var isSameTeam = function(player1,player2){
+    return player1.team === player2.team; 
+};
+
+var punch = function(player,target){
+    if (isSameTeam(player,target)){
+        return target;
+    }
+    else{
+        return decrementHP(target);
+    }
+};
+
+
+var jobe = Immutable.Map({
+    name:"Jobe",
+    hp:20, 
+    team: "red"
+});
+
+var michael = Immutable.Map({
+    name: "Michael",
+    hp: 20,
+    team: "green"
+
+});
+
+punch(jobe,michael); //=>Immutable.Map({name:"Michael", hp:19, team:"green"});
+
+```
+
+``decrementHP``,``isSameTeam``和``punch``都是纯函数, 所以是引用透明。 我们可以使用一种叫做``等式推到``(equational reasoning)的情况下, 手动执行相关代码。我们借助引用透明性来剖析一下这段代码。
+
+首先内联``isSameTeam``函数:
+
+```javascript
+var punch = function(player, target) {
+  if(player.team === target.team) {
+    return target;
+  } else {
+    return decrementHP(target);
+  }
+};
+```
+
+因为是不可变数据，我们可以直接把``team``替换为实际值：
+
+```javascript
+var punch = function(player, target) {
+  if("red" === "green") {
+    return target;
+  } else {
+    return decrementHP(target);
+  }
+};
+```
+
+``if``语句执行结果``false``,所以可以把整个``if``语句都删掉:
+
+```javascript
+var punch = function(player,target){
+    return decrementHP(target);
+};
+```
+
+如果内联``decrementHP``,我们会发现这种情况,``punch``变成来一个让``hp``的值减1的调用:
+
+```javascript
+var punch = function(player,target){
+    return target.set("hp",target.hp-1);
+}
+```
+
+>总之, 等式推导带来的分析代码的能力对重构和理解代码非常重要。[上一篇](2016-07-20-JavaScript Functional Programming)对傻狍子代码重构正是这项技术。
+
+####并行代码
+最后, 我们可以并行运行任意纯函数。因为纯函数根本不需要访问共享的内存,而且根据其定义, 纯函数也不会因副作用而进入竞争态。
+
+并行代码在服务端js环境以及使用来 web worker 的浏览器哪里是非常容易实现的,因为它们使用了线程。不过出于对非纯函数复杂度的考虑，当前主流观点还是避免使用这种并行。
+
+--------
+##柯里化(curry)
