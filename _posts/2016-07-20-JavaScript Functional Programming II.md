@@ -263,3 +263,208 @@ var punch = function(player,target){
 
 --------
 ##柯里化(curry)
+
+
+> Can't live if livin' is without you
+
+我爸爸曾经和我说有些东西直到你得到它,才会意识到他的价值。微波炉就是一个很好的例子, 智能手机也一样。老人们在没有互联网之前也过的很充实。对我来说Curry也是这样
+
+
+curry这个概念很简单: 你可以只传一部分参数来调用一个函数。它会返回一个函数来处理剩下的参数
+
+你可以选择一次性调用curry函数,或者每次只传一个参数分多次调用
+
+```js
+var add = function(x) {
+  return function(y) {
+    return x + y;
+  };
+};
+
+var increment = add(1);
+var addTen = add(10);
+
+increment(2);
+// 3
+
+addTen(2);
+// 12
+```
+
+>这里我们定义来一个``add``函数,它接受一个参数并且返回一个函数。调用``add``函数之后,这个返回的函数会记住第一个参数通过闭包。一次性调用它确实有点繁, 然而我们可以使用一个特殊的辅助函数``curry``来使这类函数定义更加容易
+
+让我们来创建一些``curry``函数爽一把
+Let's set up a few curried functions for our enjoyment.(注:"for our enjoyment"出自圣经)
+
+```js
+var curry = require('lodash/curry');
+
+var match = curry(function(what, str) {
+  return str.match(what);
+});
+
+var replace = curry(function(what, replacement, str) {
+  return str.replace(what, replacement);
+});
+
+var filter = curry(function(f, ary) {
+  return ary.filter(f);
+});
+
+var map = curry(function(f, ary) {
+  return ary.map(f);
+});
+```
+
+上面的代码我遵循一个简单的,同时也非常重要的模式。即策略性地把要操作的数据(String,Array)放到最后一个参数里。到使用它们的时候你就明白为什么这样了。
+
+```js
+match(/\s+/g, 'hello world');
+// [ ' ' ]
+
+match(/\s+/g)('hello world');
+// [ ' ' ]
+
+var hasSpaces = match(/\s+/g);
+// function(x) { return x.match(/\s+/g) }
+
+hasSpaces('hello world');
+// [ ' ' ]
+
+hasSpaces('spaceless');
+// null
+
+filter(hasSpaces, ['tori_spelling', 'tori amos']);
+// ['tori amos']
+
+var findSpaces = filter(hasSpaces);
+// function(xs) { return xs.filter(function(x) { return x.match(/\s+/g) }) }
+
+findSpaces(['tori_spelling', 'tori amos']);
+// ['tori amos']
+
+var noVowels = replace(/[aeiouy]/ig);
+// function(replacement, x) { return x.replace(/[aeiouy]/ig, replacement) }
+
+var censored = noVowels("*");
+// function(x) { return x.replace(/[aeiouy]/ig, '*') }
+
+censored('Chocolate Rain');
+// 'Ch*c*l*t* R**n'
+```
+
+这里所表明的是一种``预加载``函数的能力,同传递一两个参数来接收一个记住来这些参数的新函数
+
+我鼓励你用 `npm install lodash`, 复制上面的代码放到`repl`里run一下。以也可以在能够使用`lodash`或者`ramda`的浏览器里运行。
+
+
+##不仅仅是双关语／咖喱
+  
+curry的用途广泛。就像在``hasSpaces``,``findSpaces``和``censored``里面看到的那样,我们传给函数一些参数就可以得到新的函数。
+
+通过``map``函数简单把单个元素的函数包裹下,就可以转换为参数是数组的函数。
+
+```js
+var getChildren = function(x) {
+  return x.childNodes;
+};
+
+var allTheChildren = map(getChildren);
+```
+
+只传给函数一部参数通常也被称作``局部调用``,能过大量减少样板文件代码(boiler plate code)。考虑上面的``allTheChilder``函数,如果用``lodash``的普通``map``来写会是什么样的(note:参数的顺序也变了)
+
+```js
+var allTheChildren = function(elements) {
+  return _.map(elements, getChildren);
+};
+```
+
+通常我们不定义直接操作数组的函数,因为我们只需要内联``map(getChildren)``就可以。同样适用于``sort``,``filter``,和其他高阶函数。
+
+当我么讨论``纯函数``,我你说一个输入对应一个输出。curry正是如此,每传递一个参数就返回一个新的函数来处理剩下的参数。兄弟,那就是一个输入对应一个输出
+
+无论输出是不是另一函数,它都是纯函数。当然curry函数也允许一次传入多个参数,但这知识处于减少``()``的方便。
+
+
+
+## Exercises
+
+A quick word before we start. We'll use a library called [Ramda](http://ramdajs.com) which curries every function by default. Alternatively you may choose to use [lodash/fp](https://github.com/lodash/lodash/wiki/FP-Guide) which does the same and is written/maintained by the creator of lodash. Both will work just fine and it is a matter of preference.
+
+There are [unit tests](https://github.com/DrBoolean/mostly-adequate-guide/tree/master/code/part1_exercises) to run against your exercises as you code them, or you can just copy-paste into a javascript REPL for the early exercises if you wish.
+
+Answers are provided with the code in the [repository for this book](https://github.com/DrBoolean/mostly-adequate-guide/tree/master/code/part1_exercises/answers). Best way to do the exercises is with an [immediate feedback loop](feedback_loop.md).
+
+```js
+var _ = require('ramda');
+
+
+// Exercise 1
+//==============
+// Refactor to remove all arguments by partially applying the function.
+
+var words = function(str) {
+  return _.split(' ', str);
+};
+
+var words = split(' ');
+
+// Exercise 1a
+//==============
+// Use map to make a new words fn that works on an array of strings.
+
+var sentences = undefined;
+
+var sentences = map(words)
+
+// Exercise 2
+//==============
+// Refactor to remove all arguments by partially applying the functions.
+
+var filterQs = function(xs) {
+  return _.filter(function(x) {
+    return match(/q/i, x);
+  }, xs);
+};
+
+var filterQs = filter(match(/q/i,x));
+
+
+// Exercise 3
+//==============
+// Use the helper function _keepHighest to refactor max to not reference any
+// arguments.
+
+// LEAVE BE:
+var _keepHighest = function(x, y) {
+  return x >= y ? x : y;
+};
+
+// REFACTOR THIS ONE:
+var max = function(xs) {
+  return _.reduce(function(acc, x) {
+    return _keepHighest(acc, x);
+  }, -Infinity, xs);
+};
+
+var max = reduce(_keepHighest,-Infinity)
+
+// Bonus 1:
+// ============
+// Wrap array's slice to be functional and curried.
+// //[1, 2, 3].slice(0, 2)
+var slice = undefined;
+var slice = _.curry(function(start,end,xs){
+    return xs.slice(start,end)
+})
+
+// Bonus 2:
+// ============
+// Use slice to define a function "take" that takes n elements from the beginning of the string. Make it curried.
+// // Result for "Something" with n=4 should be "Some"
+var take = undefined;
+
+var take = slice(0)
+
+```
