@@ -39,6 +39,7 @@ gems: [jekyll-paginate]
 # replace redcarpet to kramdown,
 # although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
 # document: http://jekyllrb.com/docs/configuration/#kramdown
+hightlight: true
 highlighter: pygments # use Github Flavored Markdown !important
 markdown: redcarpet
 #redcarpet:
@@ -86,7 +87,7 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 friends: [
     {
         title: "Yukizzz姜雨竹",
-        href: "http://my.csdn.net/Yukizzz"
+        href: "https://yukizzz.github.io/"
     },
     {
         title: "Hux Blog",
